@@ -32,9 +32,9 @@ echo ""
 
 # Download and execute the main installation script
 if command -v curl >/dev/null 2>&1; then
-    curl -fsSL https://install.botcommander.dev/install.sh | bash "$@"
+    curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | bash "$@"
 elif command -v wget >/dev/null 2>&1; then
-    wget -qO- https://install.botcommander.dev/install.sh | bash "$@"
+    wget -qO- https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | bash "$@"
 else
     echo "Error: Neither curl nor wget is available. Please install one of them first."
     exit 1

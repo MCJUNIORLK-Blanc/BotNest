@@ -26,8 +26,8 @@ SERVICE_NAME="botcommander"
 DOMAIN=""
 EMAIL=""
 USE_SSL=false
-GITHUB_REPO="https://github.com/yourusername/botcommander"
-RELEASE_URL="https://api.github.com/repos/yourusername/botcommander/releases/latest"
+GITHUB_REPO="https://github.com/MCJUNIORLK-Blanc/TestDCBotPanel"
+RELEASE_URL="https://api.github.com/repos/MCJUNIORLK-Blanc/TestDCBotPanel/releases/latest"
 
 # Function to print colored output
 print_status() {

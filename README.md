@@ -49,13 +49,13 @@ The easiest way to install BotCommander on your Linux system is using our automa
 
 ```bash
 # Basic installation (localhost access only)
-curl -fsSL https://install.botcommander.dev/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | sudo bash
 
 # Or use wget if curl is not available
-wget -qO- https://install.botcommander.dev/install.sh | sudo bash
+wget -qO- https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | sudo bash
 
 # Installation with custom domain and SSL certificate
-curl -fsSL https://install.botcommander.dev/install.sh | sudo bash -s -- \
+curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | sudo bash -s -- \
   --domain your-domain.com \
   --email your-email@domain.com \
   --ssl

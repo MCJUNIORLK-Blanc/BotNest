@@ -8,14 +8,14 @@ The fastest way to install BotCommander is using our automated script:
 
 ### Basic Installation
 ```bash
-curl -fsSL https://install.botcommander.dev/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | sudo bash
 ```
 
 This will install BotCommander with default settings accessible at `http://localhost`.
 
 ### Advanced Installation with SSL
 ```bash
-curl -fsSL https://install.botcommander.dev/install.sh | sudo bash -s -- \
+curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | sudo bash -s -- \
   --domain your-domain.com \
   --email your-email@domain.com \
   --ssl
