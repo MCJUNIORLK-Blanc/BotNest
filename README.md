@@ -1,45 +1,55 @@
-# BotCommander - Discord Bot Management Panel
+# 🎮 BotCommander - Discord Bot Management Panel
 
-A gaming-themed web panel for managing Discord bots in Node.js and Python with Apache compatibility and one-script installation.
+> **Professional Discord bot management made simple**
 
-![BotCommander Dashboard](https://via.placeholder.com/800x400/262626/9f7aea?text=BotCommander+Dashboard)
+BotCommander is a comprehensive web-based management panel for Discord bots, designed with a gaming-themed interface. Built for developers who need professional bot hosting, monitoring, and management capabilities on Linux systems.
 
-## Features
+[![GitHub Stars](https://img.shields.io/github/stars/MCJUNIORLK-Blanc/TestDCBotPanel?style=for-the-badge)](https://github.com/MCJUNIORLK-Blanc/TestDCBotPanel/stargazers)
+[![License](https://img.shields.io/github/license/MCJUNIORLK-Blanc/TestDCBotPanel?style=for-the-badge)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/MCJUNIORLK-Blanc/TestDCBotPanel?style=for-the-badge)](https://github.com/MCJUNIORLK-Blanc/TestDCBotPanel/releases)
 
-### 🎮 Gaming-Themed Interface
-- Dark gaming aesthetic with purple/blue accents
-- Intuitive navigation and controls
-- Real-time status updates with WebSocket connectivity
-- Responsive design for desktop and mobile
+## ✨ Features
 
-### 🤖 Bot Management
-- Support for Node.js and Python Discord bots
-- Multiple bot templates (Basic, Music, Moderation, Economy)
-- Real-time bot status monitoring
-- One-click start, stop, and restart controls
-- Process management with automatic restarts
-- Resource usage monitoring (CPU, Memory)
+<table>
+<tr>
+<td width="50%">
 
-### 📁 File Management
-- Built-in code editor for bot files
-- File upload/download capabilities
-- Directory structure management
-- Syntax highlighting for code files
+### 🎮 **Gaming Interface**
+- Dark theme with purple/blue accents
+- Intuitive dashboard design
+- Real-time WebSocket updates
+- Mobile-responsive layout
 
-### 📊 System Monitoring
-- Real-time system resource monitoring
-- CPU, Memory, Disk, and Network usage tracking
-- Bot performance metrics
-- Activity feed with detailed logging
+### 🤖 **Multi-Language Support**
+- **Node.js** Discord bots
+- **Python** Discord bots  
+- Pre-built templates available
+- Custom bot deployment
 
-### 🔧 Advanced Features
-- WebSocket real-time updates
-- Comprehensive logging system
-- Settings management
-- Apache reverse proxy support
-- SSL/TLS support with Let's Encrypt
-- PM2 process management
-- Automatic backups
+</td>
+<td width="50%">
+
+### 📊 **Live Monitoring**
+- Real-time system metrics
+- Bot performance tracking
+- Resource usage graphs
+- Activity logging
+
+### 🔧 **Professional Tools**
+- Built-in code editor
+- File manager interface
+- Process control (PM2)
+- Apache integration
+
+</td>
+</tr>
+</table>
+
+### 🚀 **One-Click Installation**
+- Automated Linux installation
+- Apache reverse proxy setup
+- SSL/TLS with Let's Encrypt
+- Firewall configuration
 
 ## Quick Installation
 
@@ -61,14 +71,37 @@ curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/mai
   --ssl
 ```
 
+---
+
+## 📸 Screenshots
+
+<details>
+<summary>🎮 Click to view interface screenshots</summary>
+
+### Dashboard Overview
+*Real-time monitoring of all your Discord bots with system metrics*
+
+### Bot Management  
+*Intuitive controls for starting, stopping, and configuring bots*
+
+### File Manager
+*Built-in code editor with syntax highlighting for bot development*
+
+### Settings Panel
+*Comprehensive configuration options and system information*
+
+</details>
+
+---
+
 ### Installation Options
 
-| Option | Description | Example |
-|--------|-------------|---------|
-| `--domain` | Set custom domain name | `--domain bot.example.com` |
-| `--email` | Email for SSL certificate | `--email admin@example.com` |
-| `--ssl` | Enable Let's Encrypt SSL | `--ssl` |
-| `--help` | Show help information | `--help` |
+| Parameter | Description | Example | Required |
+|-----------|-------------|---------|----------|
+| `--domain` | Custom domain name | `--domain bot.example.com` | For SSL |
+| `--email` | Email for SSL certificate | `--email admin@example.com` | For SSL |
+| `--ssl` | Enable Let's Encrypt SSL | `--ssl` | Optional |
+| `--help` | Show help information | `--help` | - |
 
 ### Supported Systems
 
@@ -79,3 +112,28 @@ curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/mai
 - ✅ Rocky Linux 8, 9
 - ✅ AlmaLinux 8, 9
 - ✅ Raspberry Pi OS (Debian-based)
+
+---
+
+## 🎯 Quick Start
+
+### **Method 1: One-Command Installation (Recommended)**
+
+Perfect for production deployment with Apache and SSL:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | sudo bash
+```
+
+### **Method 2: Development Setup**
+
+For development and testing:
+
+```bash
+git clone https://github.com/MCJUNIORLK-Blanc/TestDCBotPanel.git
+cd TestDCBotPanel
+npm install
+npm run dev
+```
+
+---
