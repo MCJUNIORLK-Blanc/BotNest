@@ -65,10 +65,17 @@ curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/mai
 wget -qO- https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | sudo bash
 
 # Installation with custom domain and SSL certificate
+
+# Option A: Direct pipe
 curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | sudo bash -s -- \
   --domain your-domain.com \
   --email your-email@domain.com \
   --ssl
+
+# Option B: Download first (recommended if pipe fails)
+curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh -o install.sh
+chmod +x install.sh
+sudo ./install.sh --domain your-domain.com --email your-email@domain.com --ssl
 ```
 
 ---
@@ -122,7 +129,14 @@ curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/mai
 Perfect for production deployment with Apache and SSL:
 
 ```bash
+# Option A: Direct pipe (most systems)
 curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | sudo bash
+
+# Option B: Download first, then execute (more reliable)
+curl -fsSL https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh -o install.sh && chmod +x install.sh && sudo ./install.sh
+
+# Option C: Using wget instead of curl
+wget -qO- https://raw.githubusercontent.com/MCJUNIORLK-Blanc/TestDCBotPanel/main/install.sh | sudo bash
 ```
 
 ### **Method 2: Development Setup**
