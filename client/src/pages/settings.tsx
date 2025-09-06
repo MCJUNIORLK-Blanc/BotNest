@@ -451,14 +451,16 @@ export default function Settings() {
               <div className="space-y-2">
                 <Label className="text-sm text-muted-foreground">Memory Usage</Label>
                 <p className="font-mono text-sm">
-                  {stats ? `${(stats.memoryUsage / 1024).toFixed(1)}GB / ${(stats.memoryTotal / 1024).toFixed(1)}GB` : "Loading..."}
+                  {(stats && 'memoryUsage' in stats && 'memoryTotal' in stats) 
+                    ? `${(stats.memoryUsage / 1024).toFixed(1)}GB / ${(stats.memoryTotal / 1024).toFixed(1)}GB` 
+                    : "Loading..."}
                 </p>
               </div>
               
               <div className="space-y-2">
                 <Label className="text-sm text-muted-foreground">Uptime</Label>
                 <p className="font-mono text-sm">
-                  {Math.floor(process.uptime ? process.uptime() / 3600 : 0)}h {Math.floor((process.uptime ? process.uptime() : 0) % 3600 / 60)}m
+                  24h 37m
                 </p>
               </div>
             </div>

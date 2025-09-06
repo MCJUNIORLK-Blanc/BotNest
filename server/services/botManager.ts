@@ -136,7 +136,7 @@ export class BotManager {
         await this.runCommand("npm", ["install"], botDir);
         process = spawn("node", [bot.mainFile], {
           cwd: botDir,
-          env: { ...process.env, ...bot.environment },
+          env: { ...global.process.env, ...bot.environment },
           stdio: ["pipe", "pipe", "pipe"]
         });
       } else if (bot.language === "python") {
@@ -144,7 +144,7 @@ export class BotManager {
         await this.runCommand("pip", ["install", "-r", "requirements.txt"], botDir);
         process = spawn("python", [bot.mainFile], {
           cwd: botDir,
-          env: { ...process.env, ...bot.environment },
+          env: { ...global.process.env, ...bot.environment },
           stdio: ["pipe", "pipe", "pipe"]
         });
       } else {

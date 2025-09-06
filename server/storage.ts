@@ -187,6 +187,7 @@ export class MemStorage implements IStorage {
     const newBot: Bot = {
       ...bot,
       id,
+      description: bot.description || null,
       pid: null,
       memoryUsage: 0,
       cpuUsage: 0,
@@ -227,6 +228,9 @@ export class MemStorage implements IStorage {
     const newFile: BotFile = {
       ...file,
       id,
+      content: file.content || null,
+      size: file.size || null,
+      isDirectory: file.isDirectory || false,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -307,6 +311,7 @@ export class MemStorage implements IStorage {
     const newActivity: Activity = {
       ...activity,
       id: randomUUID(),
+      metadata: activity.metadata || {},
       timestamp: new Date(),
     };
     this.activities.unshift(newActivity);

@@ -12,8 +12,8 @@ export default function StatsCards() {
 
   const totalBots = bots.length;
   const onlineBots = bots.filter(bot => bot.status === "online").length;
-  const memoryUsage = stats ? `${(stats.memoryUsage / 1024).toFixed(1)}GB` : "0GB";
-  const cpuUsage = stats ? `${stats.cpuUsage}%` : "0%";
+  const memoryUsage = (stats && 'memoryUsage' in stats) ? `${(stats.memoryUsage / 1024).toFixed(1)}GB` : "0GB";
+  const cpuUsage = (stats && 'cpuUsage' in stats) ? `${stats.cpuUsage}%` : "0%";
 
   const statsData = [
     {

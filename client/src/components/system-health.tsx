@@ -16,10 +16,13 @@ export default function SystemHealth() {
     );
   }
 
-  const cpuPercentage = stats.cpuUsage;
-  const memoryPercentage = Math.round((stats.memoryUsage / stats.memoryTotal) * 100);
-  const diskPercentage = Math.round((stats.diskUsage / stats.diskTotal) * 100);
-  const networkUsage = stats.networkIn + stats.networkOut;
+  const cpuPercentage = (stats && 'cpuUsage' in stats) ? stats.cpuUsage : 0;
+  const memoryPercentage = (stats && 'memoryUsage' in stats && 'memoryTotal' in stats) 
+    ? Math.round((stats.memoryUsage / stats.memoryTotal) * 100) : 0;
+  const diskPercentage = (stats && 'diskUsage' in stats && 'diskTotal' in stats) 
+    ? Math.round((stats.diskUsage / stats.diskTotal) * 100) : 0;
+  const networkUsage = (stats && 'networkIn' in stats && 'networkOut' in stats) 
+    ? stats.networkIn + stats.networkOut : 0;
 
   const metrics = [
     {
@@ -30,19 +33,25 @@ export default function SystemHealth() {
     },
     {
       name: "Memory Usage", 
-      value: `${(stats.memoryUsage / 1024).toFixed(1)}GB / ${(stats.memoryTotal / 1024).toFixed(1)}GB`,
+      value: (stats && 'memoryUsage' in stats && 'memoryTotal' in stats) 
+        ? `${(stats.memoryUsage / 1024).toFixed(1)}GB / ${(stats.memoryTotal / 1024).toFixed(1)}GB`
+        : "0GB / 0GB",
       percentage: memoryPercentage,
       barClass: "progress-bar-memory"
     },
     {
       name: "Disk Usage",
-      value: `${(stats.diskUsage / 1024).toFixed(1)}GB / ${(stats.diskTotal / 1024).toFixed(1)}GB`,
+      value: (stats && 'diskUsage' in stats && 'diskTotal' in stats) 
+        ? `${(stats.diskUsage / 1024).toFixed(1)}GB / ${(stats.diskTotal / 1024).toFixed(1)}GB`
+        : "0GB / 0GB",
       percentage: diskPercentage,
       barClass: "progress-bar-disk"
     },
     {
       name: "Network I/O",
-      value: `↑ ${stats.networkOut}KB/s ↓ ${stats.networkIn}KB/s`,
+      value: (stats && 'networkIn' in stats && 'networkOut' in stats) 
+        ? `↑ ${stats.networkOut}KB/s ↓ ${stats.networkIn}KB/s`
+        : "↑ 0KB/s ↓ 0KB/s",
       percentage: Math.min(networkUsage * 2, 100), // Arbitrary scaling for visualization
       barClass: "progress-bar-network"
     }
