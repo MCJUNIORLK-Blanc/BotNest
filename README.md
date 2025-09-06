@@ -4,6 +4,14 @@
 
 BotCommander is a comprehensive web-based management panel for Discord bots, designed with a gaming-themed interface. Built for developers who need professional bot hosting, monitoring, and management capabilities on Linux systems.
 
+**🚀 Features:**
+- Real-time bot monitoring and control
+- Support for Node.js and Python Discord bots
+- Built-in file manager and code editor
+- System resource monitoring
+- Apache reverse proxy integration
+- SSL/TLS support with Let's Encrypt
+
 [![GitHub Stars](https://img.shields.io/github/stars/MCJUNIORLK-Blanc/TestDCBotPanel?style=for-the-badge)](https://github.com/MCJUNIORLK-Blanc/TestDCBotPanel/stargazers)
 [![License](https://img.shields.io/github/license/MCJUNIORLK-Blanc/TestDCBotPanel?style=for-the-badge)](LICENSE)
 [![GitHub Release](https://img.shields.io/github/v/release/MCJUNIORLK-Blanc/TestDCBotPanel?style=for-the-badge)](https://github.com/MCJUNIORLK-Blanc/TestDCBotPanel/releases)
