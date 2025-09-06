@@ -1,7 +1,13 @@
 #!/bin/bash
 
 # BotCommander - Discord Bot Management Panel Installation Script
-# Compatible with Ubuntu, Debian, CentOS, RHEL, and other Linux distributions
+# Compatible with Ubuntu, Debian, CentOS, RHEL, Rocky Linux, AlmaLinux, and Raspberry Pi OS
+# 
+# Usage:
+# curl -fsSL https://install.botcommander.dev/install.sh | sudo bash
+# 
+# With options:
+# curl -fsSL https://install.botcommander.dev/install.sh | sudo bash -s -- --domain your-domain.com --email your-email@domain.com --ssl
 
 set -e
 
@@ -20,6 +26,8 @@ SERVICE_NAME="botcommander"
 DOMAIN=""
 EMAIL=""
 USE_SSL=false
+GITHUB_REPO="https://github.com/yourusername/botcommander"
+RELEASE_URL="https://api.github.com/repos/yourusername/botcommander/releases/latest"
 
 # Function to print colored output
 print_status() {
@@ -70,31 +78,48 @@ check_root() {
 install_dependencies() {
     print_status "Installing system dependencies..."
     
-    if [[ "$OS" == *"Ubuntu"* ]] || [[ "$OS" == *"Debian"* ]]; then
+    if [[ "$OS" == *"Ubuntu"* ]] || [[ "$OS" == *"Debian"* ]] || [[ "$OS" == *"Raspbian"* ]]; then
         export DEBIAN_FRONTEND=noninteractive
         apt-get update
-        apt-get install -y curl wget gnupg2 software-properties-common apt-transport-https ca-certificates git apache2
+        apt-get install -y curl wget gnupg2 software-properties-common apt-transport-https ca-certificates git apache2 jq unzip
         
-        # Install Node.js 18.x
-        curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+        # Install Node.js 20.x (latest LTS)
+        curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
         apt-get install -y nodejs
         
         # Install Python 3 and pip
         apt-get install -y python3 python3-pip python3-venv
         
-    elif [[ "$OS" == *"CentOS"* ]] || [[ "$OS" == *"Red Hat"* ]] || [[ "$OS" == *"Rocky"* ]] || [[ "$OS" == *"AlmaLinux"* ]]; then
-        yum update -y
-        yum install -y curl wget gnupg2 git httpd
+        # Install PostgreSQL client for database support
+        apt-get install -y postgresql-client
         
-        # Install Node.js 18.x
-        curl -fsSL https://rpm.nodesource.com/setup_18.x | bash -
-        yum install -y nodejs
+    elif [[ "$OS" == *"CentOS"* ]] || [[ "$OS" == *"Red Hat"* ]] || [[ "$OS" == *"Rocky"* ]] || [[ "$OS" == *"AlmaLinux"* ]]; then
+        if command -v dnf >/dev/null 2>&1; then
+            dnf update -y
+            dnf install -y curl wget gnupg2 git httpd jq unzip postgresql
+        else
+            yum update -y
+            yum install -y curl wget gnupg2 git httpd jq unzip postgresql
+        fi
+        
+        # Install Node.js 20.x
+        curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+        if command -v dnf >/dev/null 2>&1; then
+            dnf install -y nodejs
+        else
+            yum install -y nodejs
+        fi
         
         # Install Python 3 and pip
-        yum install -y python3 python3-pip
+        if command -v dnf >/dev/null 2>&1; then
+            dnf install -y python3 python3-pip
+        else
+            yum install -y python3 python3-pip
+        fi
         
     else
         print_error "Unsupported operating system: $OS"
+        print_error "Supported systems: Ubuntu, Debian, CentOS, RHEL, Rocky Linux, AlmaLinux, Raspberry Pi OS"
         exit 1
     fi
     
@@ -116,6 +141,34 @@ create_user() {
     fi
 }
 
+# Function to download and setup application
+download_application() {
+    print_status "Downloading BotCommander application..."
+    
+    # Create temporary directory
+    TEMP_DIR=$(mktemp -d)
+    cd "$TEMP_DIR"
+    
+    # Try to get latest release
+    if command -v jq >/dev/null 2>&1; then
+        print_status "Fetching latest release information..."
+        DOWNLOAD_URL=$(curl -s "$RELEASE_URL" | jq -r '.tarball_url')
+        if [[ "$DOWNLOAD_URL" != "null" ]] && [[ -n "$DOWNLOAD_URL" ]]; then
+            print_status "Downloading from release..."
+            curl -L "$DOWNLOAD_URL" | tar xz --strip-components=1
+        else
+            print_status "Release not found, cloning repository..."
+            git clone "$GITHUB_REPO" .
+        fi
+    else
+        print_status "Cloning repository (jq not available)..."
+        git clone "$GITHUB_REPO" .
+    fi
+    
+    print_success "Application downloaded successfully"
+    return 0
+}
+
 # Function to setup application directory
 setup_app_directory() {
     print_status "Setting up application directory..."
@@ -127,35 +180,20 @@ setup_app_directory() {
     mkdir -p "$APP_DIR/uploads"
     mkdir -p "/var/log/$APP_NAME"
     
-    # Create the application files (this would normally be done by cloning a repo)
-    print_status "Setting up application files..."
+    # Download and setup application files
+    download_application
     
-    # Since we can't clone from a repo, we'll create the basic structure
-    # In a real deployment, you would clone from your Git repository
-    cat > "$APP_DIR/package.json" << 'EOF'
-{
-  "name": "botcommander",
-  "version": "1.0.0",
-  "type": "module",
-  "license": "MIT",
-  "scripts": {
-    "start": "NODE_ENV=production node dist/index.js",
-    "build": "npm run build:client && npm run build:server",
-    "build:client": "vite build",
-    "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "dev": "NODE_ENV=development tsx server/index.ts"
-  },
-  "dependencies": {
-    "express": "^4.21.2",
-    "multer": "^1.4.5",
-    "ws": "^8.18.0"
-  }
-}
-EOF
-
+    # Copy application files to installation directory
+    print_status "Installing application files..."
+    cp -r * "$APP_DIR/"
+    
     # Set ownership
     chown -R "$APP_USER:$APP_USER" "$APP_DIR"
     chown -R "$APP_USER:$APP_USER" "/var/log/$APP_NAME"
+    
+    # Clean up temporary directory
+    cd /
+    rm -rf "$TEMP_DIR"
     
     print_success "Application directory setup complete"
 }

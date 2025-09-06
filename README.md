@@ -43,16 +43,39 @@ A gaming-themed web panel for managing Discord bots in Node.js and Python with A
 
 ## Quick Installation
 
-### One-Script Installation
+### One-Command Installation
 
-The easiest way to install BotCommander is using our automated installation script:
+The easiest way to install BotCommander on your Linux system is using our automated installation script:
 
 ```bash
-# Basic installation
-curl -fsSL https://raw.githubusercontent.com/yourusername/botcommander/main/install.sh | sudo bash
+# Basic installation (localhost access only)
+curl -fsSL https://install.botcommander.dev/install.sh | sudo bash
 
-# Installation with domain and SSL
-curl -fsSL https://raw.githubusercontent.com/yourusername/botcommander/main/install.sh | sudo bash -s -- \
-  --domain bot.example.com \
-  --email admin@example.com \
+# Or use wget if curl is not available
+wget -qO- https://install.botcommander.dev/install.sh | sudo bash
+
+# Installation with custom domain and SSL certificate
+curl -fsSL https://install.botcommander.dev/install.sh | sudo bash -s -- \
+  --domain your-domain.com \
+  --email your-email@domain.com \
   --ssl
+```
+
+### Installation Options
+
+| Option | Description | Example |
+|--------|-------------|---------|
+| `--domain` | Set custom domain name | `--domain bot.example.com` |
+| `--email` | Email for SSL certificate | `--email admin@example.com` |
+| `--ssl` | Enable Let's Encrypt SSL | `--ssl` |
+| `--help` | Show help information | `--help` |
+
+### Supported Systems
+
+- ✅ Ubuntu 18.04, 20.04, 22.04, 24.04
+- ✅ Debian 10, 11, 12
+- ✅ CentOS 7, 8, 9
+- ✅ RHEL 7, 8, 9
+- ✅ Rocky Linux 8, 9
+- ✅ AlmaLinux 8, 9
+- ✅ Raspberry Pi OS (Debian-based)
