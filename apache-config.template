@@ -1,0 +1,125 @@
+<VirtualHost *:80>
+    ServerName ${DOMAIN}
+    DocumentRoot ${APP_DIR}/dist/public
+    
+    # Proxy API requests to Node.js
+    ProxyPreserveHost On
+    ProxyRequests Off
+    
+    # Proxy WebSocket connections
+    RewriteEngine On
+    RewriteCond %{HTTP:Upgrade} websocket [NC]
+    RewriteCond %{HTTP:Connection} upgrade [NC]
+    RewriteRule ^/?(.*) "ws://localhost:5000/$1" [P,L]
+    
+    # Proxy regular HTTP requests
+    ProxyPass /api/ http://localhost:5000/api/
+    ProxyPassReverse /api/ http://localhost:5000/api/
+    
+    # Serve static files directly
+    <Directory "${APP_DIR}/dist/public">
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+        Require all granted
+        
+        # Handle client-side routing
+        RewriteEngine On
+        RewriteBase /
+        RewriteRule ^index\.html$ - [L]
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule . /index.html [L]
+    </Directory>
+    
+    # Security headers
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Logging
+    ErrorLog ${LOG_DIR}/apache_error.log
+    CustomLog ${LOG_DIR}/apache_access.log combined
+    
+    # Compression
+    <IfModule mod_deflate.c>
+        AddOutputFilterByType DEFLATE text/plain
+        AddOutputFilterByType DEFLATE text/html
+        AddOutputFilterByType DEFLATE text/xml
+        AddOutputFilterByType DEFLATE text/css
+        AddOutputFilterByType DEFLATE application/xml
+        AddOutputFilterByType DEFLATE application/xhtml+xml
+        AddOutputFilterByType DEFLATE application/rss+xml
+        AddOutputFilterByType DEFLATE application/javascript
+        AddOutputFilterByType DEFLATE application/x-javascript
+    </IfModule>
+    
+    # Cache static assets
+    <IfModule mod_expires.c>
+        ExpiresActive on
+        ExpiresByType text/css "access plus 1 year"
+        ExpiresByType application/javascript "access plus 1 year"
+        ExpiresByType image/png "access plus 1 year"
+        ExpiresByType image/jpg "access plus 1 year"
+        ExpiresByType image/jpeg "access plus 1 year"
+        ExpiresByType image/gif "access plus 1 year"
+        ExpiresByType image/ico "access plus 1 year"
+        ExpiresByType image/icon "access plus 1 year"
+        ExpiresByType text/ico "access plus 1 year"
+        ExpiresByType image/svg+xml "access plus 1 year"
+    </IfModule>
+</VirtualHost>
+
+# SSL Virtual Host (will be automatically configured by Certbot if --ssl option is used)
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+    ServerName ${DOMAIN}
+    DocumentRoot ${APP_DIR}/dist/public
+    
+    # SSL Configuration (managed by Certbot)
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/${DOMAIN}/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/${DOMAIN}/privkey.pem
+    Include /etc/letsencrypt/options-ssl-apache.conf
+    SSLCertificateChainFile /etc/letsencrypt/live/${DOMAIN}/chain.pem
+    
+    # Same configuration as HTTP virtual host
+    ProxyPreserveHost On
+    ProxyRequests Off
+    
+    # Proxy WebSocket connections (SSL)
+    RewriteEngine On
+    RewriteCond %{HTTP:Upgrade} websocket [NC]
+    RewriteCond %{HTTP:Connection} upgrade [NC]
+    RewriteRule ^/?(.*) "wss://localhost:5000/$1" [P,L]
+    
+    # Proxy regular HTTPS requests
+    ProxyPass /api/ http://localhost:5000/api/
+    ProxyPassReverse /api/ http://localhost:5000/api/
+    
+    <Directory "${APP_DIR}/dist/public">
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+        Require all granted
+        
+        RewriteEngine On
+        RewriteBase /
+        RewriteRule ^index\.html$ - [L]
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule . /index.html [L]
+    </Directory>
+    
+    # Enhanced security headers for HTTPS
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' wss: ws:;"
+    
+    ErrorLog ${LOG_DIR}/apache_ssl_error.log
+    CustomLog ${LOG_DIR}/apache_ssl_access.log combined
+</VirtualHost>
+</IfModule>
