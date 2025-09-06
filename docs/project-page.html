@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BotCommander - The ultimate Discord bot management panel with gaming-themed interface, real-time monitoring, and one-command installation.">
+    <title>BotCommander - Discord Bot Management Panel</title>
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="BotCommander - Discord Bot Management Panel">
+    <meta property="og:description" content="Gaming-themed web panel for managing Discord bots with real-time monitoring, built-in file manager, and Apache integration.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://botcommander.dev">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: hsl(262, 83%, 58%);
+            --primary-foreground: hsl(210, 20%, 98%);
+            --secondary: hsl(220, 14.3%, 95.9%);
+            --secondary-foreground: hsl(220.9, 39.3%, 11%);
+            --muted: hsl(220, 14.3%, 95.9%);
+            --muted-foreground: hsl(220, 8.9%, 46.1%);
+            --accent: hsl(220, 14.3%, 95.9%);
+            --accent-foreground: hsl(220.9, 39.3%, 11%);
+            --destructive: hsl(0, 84.2%, 60.2%);
+            --destructive-foreground: hsl(210, 20%, 98%);
+            --border: hsl(220, 13%, 91%);
+            --input: hsl(220, 13%, 91%);
+            --ring: hsl(262.1, 83.3%, 57.8%);
+            --background: hsl(0, 0%, 100%);
+            --foreground: hsl(220.9, 39.3%, 11%);
+        }
+        
+        .dark {
+            --primary: hsl(263, 70%, 50%);
+            --primary-foreground: hsl(210, 20%, 98%);
+            --secondary: hsl(215, 27.9%, 16.9%);
+            --secondary-foreground: hsl(210, 20%, 98%);
+            --muted: hsl(215, 27.9%, 16.9%);
+            --muted-foreground: hsl(217.9, 10.6%, 64.9%);
+            --accent: hsl(215, 27.9%, 16.9%);
+            --accent-foreground: hsl(210, 20%, 98%);
+            --destructive: hsl(0, 62.8%, 30.6%);
+            --destructive-foreground: hsl(210, 20%, 98%);
+            --border: hsl(215, 27.9%, 16.9%);
+            --input: hsl(215, 27.9%, 16.9%);
+            --ring: hsl(263, 70%, 50%);
+            --background: hsl(224, 71.4%, 4.1%);
+            --foreground: hsl(210, 20%, 98%);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--foreground);
+            background: var(--background);
+        }
+        
+        .dark {
+            color-scheme: dark;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--background) 0%, var(--muted) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--muted-foreground);
+            margin-bottom: 2rem;
+        }
+        
+        .install-section {
+            background: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .install-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .code-block {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border: none;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .code-block:hover .copy-btn {
+            opacity: 1;
+        }
+        
+        .copy-btn:hover {
+            background: hsl(262, 83%, 48%);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature {
+            background: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: left;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .feature-desc {
+            color: var(--muted-foreground);
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background: hsl(262, 83%, 48%);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--foreground);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--muted);
+        }
+        
+        .supported-systems {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .system {
+            background: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .system.supported {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+            color: var(--muted-foreground);
+        }
+        
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--primary-foreground);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.2s;
+        }
+        
+        .theme-toggle:hover {
+            background: hsl(262, 83%, 48%);
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .hero {
+                padding: 1rem;
+            }
+            
+            .install-section {
+                padding: 1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body class="dark">
+    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">🌙</button>
+    
+    <div class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="logo">🎮 BotCommander</div>
+                <p class="tagline">The ultimate Discord bot management panel with gaming-themed interface, real-time monitoring, and one-command installation.</p>
+                
+                <div class="install-section">
+                    <div class="install-title">🚀 One-Command Installation</div>
+                    <p style="margin-bottom: 1rem; color: var(--muted-foreground);">Install BotCommander on your Linux server in seconds:</p>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'curl -fsSL https://install.botcommander.dev/install.sh | sudo bash')">Copy</button>
+                        <code>curl -fsSL https://install.botcommander.dev/install.sh | sudo bash</code>
+                    </div>
+                    
+                    <p style="margin: 1rem 0; color: var(--muted-foreground);">With custom domain and SSL:</p>
+                    
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyToClipboard(this, 'curl -fsSL https://install.botcommander.dev/install.sh | sudo bash -s -- --domain your-domain.com --email your-email@domain.com --ssl')">Copy</button>
+                        <code>curl -fsSL https://install.botcommander.dev/install.sh | sudo bash -s -- \<br>
+  --domain your-domain.com \<br>
+  --email your-email@domain.com \<br>
+  --ssl</code>
+                    </div>
+                </div>
+                
+                <div class="cta-buttons">
+                    <a href="#features" class="btn btn-primary">
+                        <span>🔥</span> View Features
+                    </a>
+                    <a href="https://github.com/yourusername/botcommander" class="btn btn-secondary">
+                        <span>📁</span> GitHub Repository
+                    </a>
+                    <a href="https://demo.botcommander.dev" class="btn btn-secondary">
+                        <span>🎯</span> Live Demo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <section id="features" class="container" style="padding: 4rem 2rem;">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: var(--primary);">✨ Features</h2>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🎮</div>
+                <div class="feature-title">Gaming-Themed Interface</div>
+                <div class="feature-desc">Dark gaming aesthetic with purple/blue accents, intuitive navigation, and responsive design for desktop and mobile.</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <div class="feature-title">Multi-Language Bot Support</div>
+                <div class="feature-desc">Support for Node.js and Python Discord bots with multiple templates: Basic, Music, Moderation, and Economy bots.</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Real-Time Monitoring</div>
+                <div class="feature-desc">Live bot status monitoring, system resource tracking (CPU, Memory, Disk), and WebSocket-powered real-time updates.</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📁</div>
+                <div class="feature-title">Built-in File Manager</div>
+                <div class="feature-desc">Code editor with syntax highlighting, file upload/download capabilities, and complete directory structure management.</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔧</div>
+                <div class="feature-title">Process Management</div>
+                <div class="feature-desc">PM2 integration, automatic bot restarts, one-click start/stop controls, and comprehensive logging system.</div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🌐</div>
+                <div class="feature-title">Apache Integration</div>
+                <div class="feature-desc">Reverse proxy configuration, SSL/TLS support with Let's Encrypt, static file serving, and WebSocket proxying.</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="container" style="padding: 2rem;">
+        <h3 style="text-align: center; font-size: 2rem; margin-bottom: 2rem; color: var(--primary);">🖥️ Supported Systems</h3>
+        
+        <div class="supported-systems">
+            <div class="system supported">✅ Ubuntu 18.04+</div>
+            <div class="system supported">✅ Debian 10+</div>
+            <div class="system supported">✅ CentOS 7+</div>
+            <div class="system supported">✅ RHEL 7+</div>
+            <div class="system supported">✅ Rocky Linux 8+</div>
+            <div class="system supported">✅ AlmaLinux 8+</div>
+            <div class="system supported">✅ Raspberry Pi OS</div>
+        </div>
+    </section>
+    
+    <section class="container" style="padding: 2rem;">
+        <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+            <h3 style="font-size: 2rem; margin-bottom: 1rem; color: var(--primary);">🚀 Get Started in Minutes</h3>
+            <p style="font-size: 1.1rem; color: var(--muted-foreground); margin-bottom: 2rem;">
+                BotCommander provides everything you need to manage Discord bots professionally. 
+                From development to production, monitor performance, manage files, and control processes all from one intuitive web interface.
+            </p>
+            
+            <div class="install-section" style="max-width: 600px; margin: 2rem auto;">
+                <div class="install-title">📋 System Requirements</div>
+                <ul style="text-align: left; color: var(--muted-foreground); line-height: 1.8;">
+                    <li><strong>RAM:</strong> 1GB minimum (2GB recommended)</li>
+                    <li><strong>Storage:</strong> 2GB free space</li>
+                    <li><strong>OS:</strong> Linux (Ubuntu, Debian, CentOS, etc.)</li>
+                    <li><strong>Network:</strong> Internet connection for setup</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <p>&copy; 2024 BotCommander. Built for Discord bot developers, by Discord bot developers.</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="https://github.com/yourusername/botcommander" style="color: var(--primary); text-decoration: none;">GitHub</a> |
+            <a href="https://docs.botcommander.dev" style="color: var(--primary); text-decoration: none;">Documentation</a> |
+            <a href="https://demo.botcommander.dev" style="color: var(--primary); text-decoration: none;">Demo</a>
+        </p>
+    </footer>
+    
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // Check for saved theme preference or default to dark mode
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        body.className = currentTheme;
+        themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+        
+        themeToggle.addEventListener('click', () => {
+            const isDark = body.classList.contains('dark');
+            body.className = isDark ? '' : 'dark';
+            themeToggle.textContent = isDark ? '🌙' : '☀️';
+            localStorage.setItem('theme', isDark ? '' : 'dark');
+        });
+        
+        // Copy to clipboard functionality
+        function copyToClipboard(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#10b981';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
